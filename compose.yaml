@@ -1,0 +1,45 @@
+services:
+  # MySQL Service
+  mysql:
+    image: mysql:8.4
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD:-root}'
+      MYSQL_DATABASE: '${DB_DATABASE:-laravel}'
+      MYSQL_USER: '${DB_USERNAME:-laravel}'
+      MYSQL_PASSWORD: '${DB_PASSWORD:-laravel}'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+  php:
+    build:
+      context: .       # This is the path where the Dockerfile is located
+      dockerfile: Dockerfile
+    image: dunglas/frankenphp
+    restart: always
+    ports:
+      - "80:80" # HTTP
+      - "443:443" # HTTPS
+      - "443:443/udp" # HTTP/3
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - app-network
+    depends_on:
+      - mysql
+
+# Volumes needed for Caddy certificates and configuration
+volumes:
+  caddy_data:
+  caddy_config:
+  mysql_data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

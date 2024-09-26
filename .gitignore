@@ -22,3 +22,8 @@ yarn-error.log
 
 /laradock
 .osp
+Dockerfile
+
+/caddy
+frankenphp
+frankenphp-worker.php
