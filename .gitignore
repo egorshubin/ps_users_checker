@@ -21,3 +21,7 @@ yarn-error.log
 /.zed
 
 /laradock
+
+/caddy
+frankenphp
+frankenphp-worker.php
